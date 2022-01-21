@@ -1,4 +1,4 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, Timestamp} from 'firebase/firestore';
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
@@ -10,12 +10,9 @@ function SaveInitialProductInventory() {
 
    // Adding Updated Product Data to Firebase
    const addUpdatedProductDatatoFirebase = async () => {
-      // const updatedList = updatedPrice;
-      // const Editor = currentUser.email;
-
-      const collectionRef = collection(db, 'InventoryList');
-      const payload = { reduxUpdatedProductData };
-      await addDoc(collectionRef, payload);
+      // const collectionRef = collection(db, 'InventoryList');
+      // const payload = { ...reduxUpdatedProductData ,  created:Timestamp.fromDate(new Date()) };
+      // await addDoc(collectionRef, payload);
       console.log(reduxUpdatedProductData);
    };
 

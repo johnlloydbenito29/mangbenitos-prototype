@@ -10,7 +10,7 @@ const productInventoryReducer = (state = initialState, action) => {
       case 'GET_UPDATED_PRODUCT_DATA':
          return {
             ...state,
-            updatedProductData: action.updatedProductDataPayload,
+            updatedProductData: {...action.updatedProductDataPayload},
          };
       default:
          return state;
