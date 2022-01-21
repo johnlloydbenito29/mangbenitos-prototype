@@ -1,0 +1,37 @@
+.page-header {
+   background-color: #212529;
+   box-shadow: 0rem 0px 10px red;
+   position: fixed;
+   width: 100%;
+   top: 0;
+   z-index: 999;
+}
+
+.page-header__holder {
+   display: flex;
+}
+
+.brand-logo {
+   width: 35%;
+}
+
+.brand-logo__holder {
+   background: black;
+   width: 245px;
+   padding: 10px;
+   display: flex;
+   justify-content: center;
+}
+
+.username__holder {
+   margin-left: 1.25rem;
+   display: flex;
+   align-self: center;
+}
+
+.username__holder p {
+   color: rgba(255, 255, 255, 0.55);
+   letter-spacing: 2px;
+   font-size: 0.9rem;
+   margin: 0;
+}

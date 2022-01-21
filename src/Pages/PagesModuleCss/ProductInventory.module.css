@@ -1,0 +1,21 @@
+.page-title {
+    background: rgb(10,10,10);
+    background: -moz-linear-gradient(90deg, rgba(10,10,10,1) 26%, rgba(140,0,255,1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(10,10,10,1) 26%, rgba(140,0,255,1) 100%);
+    background: linear-gradient(90deg, rgba(10,10,10,1) 26%, rgba(140,0,255,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a0a0a",endColorstr="#8c00ff",GradientType=1);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+ }
+ 
+ .card-header {
+    background: rgb(10, 10, 10);
+    background: -moz-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(140, 0, 255, 1) 100%);
+    background: -webkit-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(140, 0, 255, 1) 100%);
+    background: linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(140, 0, 255, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a0a0a",endColorstr="#8c00ff",GradientType=1);
+ }
+ 

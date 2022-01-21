@@ -1,0 +1,40 @@
+.side-bar {
+   height: 100%;
+   position: fixed;
+   background-color: #ffffff;
+   box-shadow: 0px 5px 10px red;
+   padding-top: 2.5rem;
+}
+
+.side-nav__title {
+   font-size: 1.1rem;
+   color: #6c757d;
+   padding-top: 1rem;
+   line-height: 1.2;
+}
+
+.side-nav-link__holder {
+   list-style-type: none;
+   padding: 0;
+}
+.side-nav-link {
+   text-decoration: none;
+   font-weight: 500;
+   color: #333;
+   font-size: 0.87rem;
+   padding: 0 10px;
+}
+.side-nav-link:hover {
+   color: #333;
+}
+
+.side-nav-link__holder li {
+   padding: 8px 0;
+}
+
+.side-nav-link__active {
+   color: red;
+}
+.side-nav-link__active:hover {
+    color: red;
+ }
