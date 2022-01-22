@@ -10,9 +10,9 @@ function SaveInitialProductInventory() {
 
    // Adding Updated Product Data to Firebase
    const addUpdatedProductDatatoFirebase = async () => {
-      // const collectionRef = collection(db, 'InventoryList');
-      // const payload = { ...reduxUpdatedProductData ,  created:Timestamp.fromDate(new Date()) };
-      // await addDoc(collectionRef, payload);
+      const collectionRef = collection(db, 'InventoryList');
+      const payload = { ...reduxUpdatedProductData ,  created:Timestamp.fromDate(new Date()) };
+      await addDoc(collectionRef, payload);
       console.log(reduxUpdatedProductData);
    };
 
