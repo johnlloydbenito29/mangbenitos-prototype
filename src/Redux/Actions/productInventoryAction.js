@@ -5,8 +5,9 @@ export const getProductData = () => {
    return async function (dispatch) {
       const productArray = [];
       try {
-         const productQuerySnapshot = await getDocs(collection(db, 'Pruducts'));
+         const productQuerySnapshot = await getDocs(collection(db, 'Products'));
          productQuerySnapshot.forEach((doc) => {
+			 console.log('doc', doc.data());
             productArray.push({
                key: doc.id,
                item: doc.data(),
