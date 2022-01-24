@@ -22,12 +22,3 @@ export const getProductData = () => {
       });
    };
 };
-
-export const getUpdatedProductData = (updatedProductData) => {
-   return (dispatch) => {
-      dispatch({
-         type: 'GET_UPDATED_PRODUCT_DATA',
-         updatedProductDataPayload: updatedProductData,
-      });
-   };
-};

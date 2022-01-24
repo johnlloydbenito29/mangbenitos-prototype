@@ -11,7 +11,7 @@ import SetInitialInventoryStyle from '../../PagesModuleCss/SetInitialInventory.m
 import PagesBody from '../../PagesUI/PagesBody';
 import PageTitleCard from '../../PagesUI/PageTitleCard';
 import {useAuth} from '../../../Contex/AuthenticationContext';
-import {getProductData, getUpdatedProductData} from '../../../Redux/Actions/productInventoryAction';
+import {getProductData} from '../../../Redux/Actions/productInventoryAction';
 import {db} from '../../../Firebase/Firebase';
 
 function ProductInventory() {
