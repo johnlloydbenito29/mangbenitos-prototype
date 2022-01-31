@@ -1,196 +1,209 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import cn from 'classnames';
-import {useSelector, useDispatch} from 'react-redux';
-import {addDoc, collection, Timestamp} from 'firebase/firestore';
-import {Row, Col, Card, Button} from 'react-bootstrap';
-import {writeBatch, doc} from "firebase/firestore";
+import { useSelector, useDispatch } from 'react-redux';
+import { addDoc, collection, deleteDoc, onSnapshot, Timestamp } from 'firebase/firestore';
+import { Row, Col, Card, Button } from 'react-bootstrap';
+import { writeBatch, doc } from 'firebase/firestore';
 
 import ProductInventoryStyle from '../../PagesModuleCss/ProductInventory.module.css';
 import SetInitialInventoryStyle from '../../PagesModuleCss/SetInitialInventory.module.css';
 
 import PagesBody from '../../PagesUI/PagesBody';
 import PageTitleCard from '../../PagesUI/PageTitleCard';
-import {useAuth} from '../../../Contex/AuthenticationContext';
-import {getProductData} from '../../../Redux/Actions/productInventoryAction';
-import {db} from '../../../Firebase/Firebase';
+import { useAuth } from '../../../Contex/AuthenticationContext';
+import { getProductData } from '../../../Redux/Actions/productInventoryAction';
+import { db } from '../../../Firebase/Firebase';
+import AddProduct from './AddProduct';
 
 function ProductInventory() {
-	const {currentUser} = useAuth();
+   const { currentUser } = useAuth();
 
-	// Redux State
-	const reduxProductInventory = useSelector((state) => state.productInventory.initialProductArray);
+   // Modal
+   const [showModal, setShowModal] = useState(false);
 
-	const [products, setProducts] = useState([]);
+   // Redux State
+   const reduxProductInventory = useSelector((state) => state.productInventory.initialProductArray);
 
-	//Updated Datas from SetInitialInventory
-	const [updatedQuantity, setupdatedQuantity] = useState(null);
-	const [item, setItem] = useState(null);
-	const [updatedPrice, setupdatedPrice] = useState(null);
+   const [producta, setProducta] = useState([]);
+   console.log(producta);
 
-	//Dispatch Redux
-	const dispatch = useDispatch();
+   const [products, setProducts] = useState([]);
 
-	// Get Data From Firebase
-	useEffect(() => {
-		dispatch(getProductData());
-	}, [dispatch]);
+   const total = products.length ? products.reduce((prevProduct, product) => (prevProduct = prevProduct + product.item.total_price), 0) : 0;
 
-	useEffect(() => {
-		setProducts(reduxProductInventory);
-		console.log('culprit...')
-	}, [reduxProductInventory]);
+   //Dispatch Redux
+   const dispatch = useDispatch();
 
-	let [quantityCounter, setQuantityCounter] = useState(0);
-	let [priceTotal, setPriceTotal] = useState(0);
+   useEffect(() => {
+      onSnapshot(collection(db, 'Products'), (snapshot) => {
+         setProducts(snapshot.docs.map((doc) => ({ key: doc.id, item: doc.data() })));
+      });
+   }, []);
 
+   useEffect(() => {
+      setProducts(reduxProductInventory);
+      console.log('culprit...');
+   }, [reduxProductInventory]);
 
-	// useEffect(() => {
-	//    setQuantityCounter(quantity);
-	// }, [quantity]);
+   const incrementQuantity = (key, toMinus = false) => {
+      const index = products.findIndex((item) => item.key === key);
 
-	// useEffect(() => {
-	//    setPriceTotal(price);
-	// }, [price]);
+      if (index === -1) {
+         return;
+      }
 
-	const incrementQuantity = (key, toMinus = false) => {
-		const index = products.findIndex((item) => item.key === key);
+      const currentProduct = products[index];
 
-		if (index === -1) {
-			return;
-		}
+      // Uses referenced value
+      const { quantity, unit_price: unitPrice } = currentProduct.item;
 
-		const currentProduct = products[index];
+      if (toMinus) {
+         products[index].item.quantity = quantity - 1;
+         products[index].item.total_price = (quantity - 1) * unitPrice;
+      } else {
+         products[index].item.quantity = quantity + 1;
+         products[index].item.total_price = (quantity + 1) * unitPrice;
+      }
 
-		// Uses referenced value
-		const {quantity, unit_price: unitPrice} = currentProduct.item;
+      setProducts([...products]);
+   };
 
-		if (toMinus) {
-			products[index].item.quantity = quantity - 1;
-			products[index].item.total_price = (quantity - 1) * unitPrice;
-		} else {
-			products[index].item.quantity = quantity + 1;
-			products[index].item.total_price = (quantity + 1) * unitPrice;
-		}
+   const setProductName = (key, e) => {
+      const index = products.findIndex((item) => item.key === key);
 
-		setProducts([...products]);
-	};
+      if (index === -1) {
+         return;
+      }
 
-	const setProductName = (key, e) => {
-		const index = products.findIndex((item) => item.key === key);
+      const value = e.target.value;
 
-		if (index === -1) {
-			return;
-		}
+      products[index].item.name = value;
 
-		const value = e.target.value;
+      setProducts([...products]);
+   };
 
-		products[index].item.name = value;
+   const setProductUnitPrice = (key, e) => {
+      const index = products.findIndex((item) => item.key === key);
 
-		setProducts([...products]);
-	}
+      if (index === -1) {
+         return;
+      }
 
-	const setProductUnitPrice = (key, e) => {
-		const index = products.findIndex((item) => item.key === key);
+      const value = e.target.value;
 
-		if (index === -1) {
-			return;
-		}
+      const currentProduct = products[index];
 
-		const value = e.target.value;
+      // Uses referenced value
+      const { quantity } = currentProduct.item;
 
-		const currentProduct = products[index];
+      products[index].item.unit_price = value;
+      products[index].item.total_price = quantity * value;
+      setProducts([...products]);
+   };
 
-		// Uses referenced value
-		const {quantity} = currentProduct.item;
+   // Adding Updated Product Data to Firebase
+   const save = async () => {
+      try {
+         const batch = writeBatch(db);
 
-		products[index].item.unit_price = value;
-		products[index].item.total_price = quantity * value;
-		setProducts([...products]);
-	}
+         // Loop through products to update each
 
+         products.forEach((product) => {
+            console.log('product.key', product.key);
 
-	// Adding Updated Product Data to Firebase
-	const save = async () => {
-		try {
-			const batch = writeBatch(db);
+            const sfRef = doc(db, 'Products', product.key);
+            batch.update(sfRef, { ...product.item });
+         });
 
-			// Loop through products to update each
+         await batch.commit();
+      } catch (err) {
+         console.log(err);
+         return;
+      }
+      try {
+         // Adding Data to Firebase
 
-			products.forEach((product) => {
-				console.log('product.key', product.key);
+         const collectionRef = collection(db, 'InventoryList');
+         const payload = { ...products, total, Editor: currentUser.email, createdAt: Timestamp.now() };
 
-				const sfRef = doc(db, 'Products', product.key);
-				batch.update(sfRef, {...product.item});
-			})
+         await addDoc(collectionRef, payload);
+      } catch (err) {
+         console.log(err);
+      }
+   };
 
-			await batch.commit();
-		} catch (err) {
-			console.log(err);
-			return;
-		}
-	};
+   const deleteHandler = async (id) => {
+      const docRef = doc(db,"Products",id)
+       await deleteDoc(docRef)
+   }
 
-	if (!products) return null;
+   if (!products) return null;
 
-	console.log('state before render...', products)
+   console.log('state before render...', products);
 
-	return (
-		<PagesBody>
-			<PageTitleCard>
-				<div className={ProductInventoryStyle['page-title']}>
-					<h2 className="text-white">Product Inventory</h2>
-				</div>
-				<div className="mt-3">
-					<Row>
-						<Col xs={6}>
-							<Card>
-								<Card.Header as="h5" className={cn(ProductInventoryStyle['card-header'], 'text-white', 'text-center')}>
-									Product List
-								</Card.Header>
-								<Card.Body>
-									{products.map((product) => (
-										<>
-											<Card className="mb-3" key={product.key}
-												updatingProductD>
-												<div className={SetInitialInventoryStyle['product-holder']}>
-													<Row>
-														<Col>
-															<input className="d-block" type="text" value={product.item.name} onChange={(e) => setProductName(product.key, e)} />
-														</Col>
-														<Col>
-															<div className="d-flex">
-																<button onClick={() => incrementQuantity(product.key)}>+</button>
-																<p>{product.item.quantity}</p>
-																<button disabled={product.item.quantity === 0} onClick={() => incrementQuantity(product.key, true)}>
-																	-
-																</button>
-															</div>
-														</Col>
-														<Col>
-															<input className="d-block" type="number" value={product.item.unit_price} onChange={(e) => setProductUnitPrice(product.key, e)} />
-														</Col>
-														<Col>
-															<p>{product.item.total_price}</p>
-														</Col>
-													</Row>
-												</div>
-											</Card>
-										</>
-									))}
-									<div>
-										<Button variant="primary" onClick={save}>
-											Save Inventory
-										</Button>
-										<h5>TOTAL: {products.length ? products.reduce((prevProduct, product) => product.item.total_price + prevProduct.item.total_price) : 0}</h5>
-									</div>
-								</Card.Body>
-							</Card>
-						</Col>
-					</Row>
-				</div>
-			</PageTitleCard>
-		</PagesBody>
-	);
+   return (
+      <PagesBody>
+         <PageTitleCard>
+            <div className={ProductInventoryStyle['page-title']}>
+               <h2 className="text-white">Product Inventory</h2>
+            </div>
+            <div className="mt-3">
+               <Row>
+                  <Col xs={6}>
+                     <Card>
+                        <Card.Header as="h5" className={cn(ProductInventoryStyle['card-header'], 'text-white', 'text-center')}>
+                           Product List
+                        </Card.Header>
+                        <Card.Body>
+                           {products.map((product) => (
+                              <Card className="mb-3" key={product.key}>
+                                 <div className={SetInitialInventoryStyle['product-holder']}>
+                                    <Row>
+                                       <Col>
+                                          <input className="d-block" type="text" value={product.item.name} onChange={(e) => setProductName(product.key, e)} />
+                                       </Col>
+                                       <Col>
+                                          <div className="d-flex">
+                                             <button onClick={() => incrementQuantity(product.key)}>+</button>
+                                             <p>{product.item.quantity}</p>
+                                             <button disabled={product.item.quantity === 0} onClick={() => incrementQuantity(product.key, true)}>
+                                                -
+                                             </button>
+                                          </div>
+                                       </Col>
+                                       <Col>
+                                          <input className="d-block" type="number" value={product.item.unit_price} onChange={(e) => setProductUnitPrice(product.key, e)} />
+                                       </Col>
+                                       <Col>
+                                          <p>{product.item.total_price}</p>
+                                       </Col>
+                                       <Col>
+                                          <Button onClick={() => deleteHandler(product.key)}  variant="danger">
+                                             x
+                                          </Button>
+                                       </Col>
+                                    </Row>
+                                 </div>
+                              </Card>
+                           ))}
+                           <div>
+                              <Button variant="primary" onClick={save}>
+                                 Save Inventory
+                              </Button>
+                              <Button variant="primary" onClick={() => setShowModal(!showModal)}>
+                                 Add Product
+                              </Button>
+                              <h5>TOTAL: {total}</h5>
+                           </div>
+                        </Card.Body>
+                     </Card>
+                  </Col>
+               </Row>
+            </div>
+         </PageTitleCard>
+         {showModal && <AddProduct modalToggle={() => setShowModal(!showModal)} />}
+      </PagesBody>
+   );
 }
 
 export default ProductInventory;

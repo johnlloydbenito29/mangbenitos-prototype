@@ -1,3 +1,5 @@
+import { doc, onSnapshot } from "firebase/firestore";
+
 const initialState = { initialProductArray: [], updatedProductData: [], initialInventory: [] };
 
 const productInventoryReducer = (state = initialState, action) => {

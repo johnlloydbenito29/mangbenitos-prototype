@@ -40,12 +40,10 @@ function Login() {
                      <h2 className="text-center mb-4">Log In</h2>
                      {signUpError && <Alert variant="danger">{signUpError}</Alert>}
                      <Form onSubmit={handleSubmitSignUp}>
-                        <Form.Group id="email">
+                        <Form.Group id="addProduct">
                            <Form.Label>Email</Form.Label>
                            <Form.Control type="email" ref={emailRef} required />
-                        </Form.Group>
-                        <Form.Group id="password">
-                           <Form.Label>password</Form.Label>
+                           <Form.Label>Password</Form.Label>
                            <Form.Control type="password" ref={passwordRef} required />
                         </Form.Group>
                         <Button disabled={loadingSignup } className="w-100 my-4" type="submit">
