@@ -16,7 +16,6 @@ function AddProduct({ modalToggle }) {
    // Add a new document in collection "cities"
    const addProductHandler = async (e) => {
       e.preventDefault();
-      e.target.reset();
       try {
          const collectionRef = collection(db, 'Products');
          const payload = { name: name, quantity: Number(quantity), unit_price: Number(price), total_price: Number(price), updated_at: Timestamp.now(), createdAt: Timestamp.now() };
