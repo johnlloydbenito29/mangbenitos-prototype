@@ -16,9 +16,10 @@ function AddProduct({ modalToggle }) {
    // Add a new document in collection "cities"
    const addProductHandler = async (e) => {
       e.preventDefault();
+      e.target.reset();
       try {
          const collectionRef = collection(db, 'Products');
-         const payload = { name: name, quantity: quantity, unit_price: price, total_price: price, updated_at: Timestamp.now(), createdAt: Timestamp.now() };
+         const payload = { name: name, quantity: Number(quantity), unit_price: Number(price), total_price: Number(price), updated_at: Timestamp.now(), createdAt: Timestamp.now() };
 
          console.log(`Name...`, name);
          console.log(`quantity...`, quantity);
@@ -26,6 +27,7 @@ function AddProduct({ modalToggle }) {
 
          await addDoc(collectionRef, payload);
 
+         setName('')
          console.log('Document written with ID: ', collectionRef.id);
       } catch (err) {
          console.log(err);
