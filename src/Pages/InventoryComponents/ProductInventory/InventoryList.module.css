@@ -1,0 +1,28 @@
+.card-header {
+   background: rgb(10, 10, 10);
+   background: -moz-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(140, 0, 255, 1) 100%);
+   background: -webkit-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(140, 0, 255, 1) 100%);
+   background: linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(140, 0, 255, 1) 100%);
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a0a0a",endColorstr="#8c00ff",GradientType=1);
+}
+
+.list-body {
+   height: 500px;
+   overflow: auto;
+   position: relative;
+}
+
+.list-titles-holder div {
+   border: 1px solid gray;
+   padding: 0.50rem;
+}
+
+.list-titles-holder p {
+  margin: 0;
+}
+
+.list-titles-holder{
+   position: sticky;
+   top: -16px;
+   background: whitesmoke;
+}
