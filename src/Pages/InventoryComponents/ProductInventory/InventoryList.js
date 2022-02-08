@@ -45,30 +45,36 @@ function InventoryList() {
             </div>
             <div>
                {inventoryList.map((inventoryData) => (
-                  <div>
-                     {inventoryData.item.items.map((item) => (
+                  <Row className={InventoryListCss['list-item-holder']}>
+                     <Col xs={6}>
+                        {inventoryData.item.items.map((item) => (
+                           <Row>
+                              <Col>
+                                 <p className="text-center"> {item.item.name}</p>
+                              </Col>
+                              <Col>
+                                 <p className="text-center"> {item.item.quantity}</p>
+                              </Col>
+                              <Col>
+                                 <p className="text-center"> {item.item.unit_price}</p>
+                              </Col>
+                           </Row>
+                        ))}
+                     </Col>
+                     <Col xs={6}>
                         <Row>
                            <Col>
-                              <p>{item.item.name}</p>
+                              <p className="text-center"> {inventoryData.item.total}</p>
                            </Col>
                            <Col>
-                              <p>{item.item.quantity}</p>
+                              <p className="text-center"> {inventoryData.item.total}</p>
                            </Col>
                            <Col>
-                              <p>{item.item.unit_price}</p>
-                           </Col>
-                           <Col>
-                              <p>{inventoryData.item.total}</p>
-                           </Col>
-                           <Col>
-                              <p>{inventoryData.item.total}</p>
-                           </Col>
-                           <Col>
-                              <p>{inventoryData.item.Editor}</p>
+                              <p className="text-center"> {inventoryData.item.Editor}</p>
                            </Col>
                         </Row>
-                     ))}
-                  </div>
+                     </Col>
+                  </Row>
                ))}
             </div>
          </Card.Body>

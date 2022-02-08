@@ -26,3 +26,10 @@
    top: -16px;
    background: whitesmoke;
 }
+
+.list-item-holder{
+   margin: 1rem 0;
+   padding: 5px;
+   border-radius: 8px;
+   box-shadow: 0rem 0px 10px red;
+}
