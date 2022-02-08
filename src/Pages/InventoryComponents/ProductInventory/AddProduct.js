@@ -43,7 +43,7 @@ function AddProduct({ modalToggle }) {
                      <h2 className="text-center mb-4">Add Product</h2>
                      <Form>
                         <Form.Group>
-                           <Form.Label>Name</Form.Label>
+                           <Form.Label>Product Name</Form.Label>
                            <Form.Control type="text" onChange={(event) => setName(event.target.value)} />
                         </Form.Group>
                         <Form.Group>

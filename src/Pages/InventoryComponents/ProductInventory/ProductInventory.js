@@ -149,7 +149,31 @@ function ProductInventory() {
                            <Card.Header as="h5" className={cn(ProductInventoryStyle['card-header'], 'text-white', 'text-center')}>
                               Product List
                            </Card.Header>
-                           <Card.Body  className="px-2 py-2">
+                           <Card.Body  className={cn(ProductInventoryStyle['card-body-holder'],'px-2','py-2')}>
+                              <div className={ProductInventoryStyle['product-nav-holder']}> 
+                                 <Row>
+                                    <Col xs={4}>
+                                       <p className='text-center'>
+                                          Product Name
+                                       </p>
+                                    </Col>
+                                    <Col xs={2}>
+                                       <p className='text-center'>
+                                          Quantity
+                                       </p>
+                                    </Col>
+                                    <Col xs={3}>
+                                       <p className='text-center'>
+                                         Unit Price
+                                       </p>
+                                    </Col>
+                                    <Col>
+                                       <p className='text-center'>
+                                        Total Price
+                                       </p>
+                                    </Col>
+                                 </Row>
+                              </div>
                               {products.map((product) => (
                                  <Card className="mb-3" key={product.key}>
                                     <Card.Body className="px-2 py-2">
@@ -158,7 +182,7 @@ function ProductInventory() {
                                              <Col xs={4}>
                                                 <input className="form-control" type="text" value={product.item.name} onChange={(e) => setProductName(product.key, e)} />
                                              </Col>
-                                             <Col xs={3}>
+                                             <Col xs={2}>
                                                 <div className="d-flex">
                                                    <button className="btn btn-success" onClick={() => incrementQuantity(product.key)}>
                                                       +
@@ -169,7 +193,7 @@ function ProductInventory() {
                                                    </button>
                                                 </div>
                                              </Col>
-                                             <Col xs={2}>
+                                             <Col xs={3}>
                                                 <input className="form-control" type="number" value={product.item.unit_price} onChange={(e) => setProductUnitPrice(product.key, e)} />
                                              </Col>
                                              <Col>

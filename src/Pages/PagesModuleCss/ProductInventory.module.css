@@ -19,3 +19,16 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a0a0a",endColorstr="#8c00ff",GradientType=1);
  }
  
+ .card-body-holder{
+   height: 500px;
+   overflow: auto;
+   width: 100%;
+   position: relative;
+ }
+
+ .product-nav-holder{
+   position: sticky;
+   top: -5px;
+   background: white;
+   z-index: 9;
+}
