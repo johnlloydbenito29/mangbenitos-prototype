@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
 import cn from 'classnames';
-import { Card, Row, Table, Col } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 
 import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../../../Firebase/Firebase';
 import InventoryListCss from './InventoryList.module.css';
 
 function InventoryList() {
+
    const [inventoryList, setInventoryList] = useState([]);
    console.log('inventoryList...', inventoryList);
 
+   // List of inventory Data
    useEffect(() => {
       onSnapshot(query(collection(db, 'InventoryList'), orderBy('createdAt', 'desc'), limit()), (snapshot) => {
          setInventoryList(snapshot.docs.map((doc) => ({ key: doc.id, item: doc.data() })));
       });
    }, []);
+
+
 
    return (
       <Card>
@@ -45,10 +49,10 @@ function InventoryList() {
             </div>
             <div>
                {inventoryList.map((inventoryData) => (
-                  <Row className={InventoryListCss['list-item-holder']}>
+                  <Row className={InventoryListCss['list-item-holder']} key={inventoryData.key}>
                      <Col xs={6}>
                         {inventoryData.item.items.map((item) => (
-                           <Row>
+                           <Row key={item.key}>
                               <Col>
                                  <p className="text-center"> {item.item.name}</p>
                               </Col>

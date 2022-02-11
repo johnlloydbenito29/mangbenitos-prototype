@@ -35,7 +35,7 @@ function Sidebar() {
                   <ul className={SidebarStyle['side-nav-link__holder']}>
                      <li>
                         <NavLink className={SidebarStyle['side-nav-link']} activeClassName={SidebarStyle['side-nav-link__active']} exact to="/Dashboard/TakeOut">
-                           Take Out
+                          Willing to Wait
                         </NavLink>
                      </li>
                      <li>
