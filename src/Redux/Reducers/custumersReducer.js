@@ -1,20 +1,15 @@
+const initialState = { merchQuantity: 5 };
 
-const initialState = {latestInventory:[]}
+const custumersReducer = (state = initialState, action) => {
+   switch (action.type) {
+      case 'ADD_QUANTITY':
+         return {
+            merchQuantity: state.merchQuantity + 1,
+         };
 
-const custumersReducer = (state = initialState,action) => {
-  
-    switch (action.type) {
-        case "GET_LATEST_INVENTORY":
-            const latestInvArr = action.payLoad.reduce((prevInvarr,latestInvArr)=>(prevInvarr = prevInvarr > latestInvArr.item.createdAt ? prevInvarr: latestInvArr),0)
-            return {
-                ...state,
-                latestInventory:latestInvArr
-            }
-    
-        default:
-            return state;
-    }
+      default:
+         return state;
+   }
+};
 
-}
-
-export default custumersReducer
+export default custumersReducer;
