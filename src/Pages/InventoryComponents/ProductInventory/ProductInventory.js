@@ -50,7 +50,7 @@ function ProductInventory() {
 
       // Uses referenced value
       const { quantity, unit_price: unitPrice } = currentProduct.item;
-
+  
       if (toMinus) {
          products[index].item.quantity = quantity - 1;
          products[index].item.total_price = (quantity - 1) * unitPrice;

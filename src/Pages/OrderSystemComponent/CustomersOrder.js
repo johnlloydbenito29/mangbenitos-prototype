@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-// import { useDispatch, useSelector } from 'react-redux';
-// import { addQuantity } from '../../Redux/Actions/customersOrderAction';
-
 import { collection, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 
@@ -16,9 +13,7 @@ import Form from 'react-bootstrap/Form';
 import cn from 'classnames';
 
 function CustomersOrder() {
-   // const [productLists, setproductLists] = useState([]);
-   const [merchandises,setMerchandise] = useState([]);
-
+   const [merchandises, setMerchandise] = useState([]);
 
    //Customers Info
    const [customersName, setCustomersName] = useState('');
@@ -28,13 +23,7 @@ function CustomersOrder() {
 
    console.log(customersName, customersAddress, customersPhoneNum, customersRecievingMethod);
 
-   // productLists.forEach((productList) => {
-   //    merchandises.push({ merchQuant: 0, productList });
-   //    console.log(`im working`);
-   //    console.log(`before Update`,merchandises);
-   // });
-
-   const addMerchQuantHandler = (key) => {
+   const addMerchQuantHandler = (key, toMinus = false) => {
       const index = merchandises.findIndex((item) => item.key === key);
 
       if (index === -1) {
@@ -44,24 +33,31 @@ function CustomersOrder() {
       const currentProduct = merchandises[index];
 
       // Uses referenced value
-      const { merchQuant } = currentProduct ;
-      merchandises[index].merchQuant  = merchQuant + 1;
+      if (toMinus === false) {
+         const { merchQuant } = currentProduct;
+         merchandises[index].merchQuant = merchQuant + 1;
 
-      setMerchandise([...merchandises])
+         // To update the Quantity Stocks
+         merchandises[index].item.quantity = merchandises[index].item.quantity -  1;
 
+      } else {
+         const { merchQuant } = currentProduct;
+         merchandises[index].merchQuant = merchQuant - 1;
+
+         // To update the Quantity Stocks
+         merchandises[index].item.quantity = merchandises[index].item.quantity + 1;
+      }
+      setMerchandise([...merchandises]);
    };
-  
+
+
+
 
    // List of inventory Data
-   //  useEffect(() => {
-   //    onSnapshot(query(collection(db, 'Products'), orderBy('created_at', 'desc'), limit()), (snapshot) => {
-   //       setproductLists(snapshot.docs.map((doc) => ({ key: doc.id, item: doc.data() })));
-   //    });
-   // }, []);
 
    useEffect(() => {
       onSnapshot(query(collection(db, 'Products'), orderBy('created_at', 'desc'), limit()), (snapshot) => {
-         setMerchandise(snapshot.docs.map((doc) => ({ key: doc.id, item: doc.data() , merchQuant:0})));
+         setMerchandise(snapshot.docs.map((doc) => ({ key: doc.id, item: doc.data(), merchQuant: 0 })));
       });
    }, []);
 
@@ -72,8 +68,8 @@ function CustomersOrder() {
                <h2 className="text-white">What is your order?</h2>
             </div>
 
-            <div className={CustomersOrderCss['order-card']}>
-               <div className={cn(CustomersOrderCss['order-card-title'], 'mt-5')}>
+            <div className={cn(CustomersOrderCss['order-card'],'py-5')}>
+               <div className={CustomersOrderCss['order-card-title']}>
                   <h4 className="text-white text-center">Order Now!</h4>
                </div>
                <Card>
@@ -91,11 +87,18 @@ function CustomersOrder() {
                                  <Form.Control type="tel" value={customersPhoneNum} onChange={(e) => setCustomersPhoneNum(e.target.value)} placeholder="Phone Number" required />
                               </Col>
                               <Col>
-                                 <select className="form-select" defaultValue={'Method'}  value={customersRecievingMethod} onChange={(e) => setCustomersRecievingMethod(e.target.value)} aria-label=" March Quantity" required>
-                                    <option value={"Method"} selected hidden>
+                                 <select
+                                    className="form-select"
+                                    defaultValue={'Method'}
+                                    value={customersRecievingMethod}
+                                    onChange={(e) => setCustomersRecievingMethod(e.target.value)}
+                                    aria-label=" March Quantity"
+                                    required
+                                 >
+                                    <option value={'Method'} selected hidden>
                                        Receiving Method
                                     </option>
-                                    <option  value="Deliver">Deliver</option>
+                                    <option value="Deliver">Deliver</option>
                                     <option value="Willing To Wait">Willing To Wait</option>
                                  </select>
                               </Col>
@@ -107,15 +110,25 @@ function CustomersOrder() {
                            {merchandises.map((merchItem) => (
                               <Col sm={4} key={merchItem.key}>
                                  <Card className="mb-3">
-                                    <Card.Body className="text-center">
-                                       <p>{merchItem.item.name}</p>
-                                       <p>{merchItem.item.unit_price} P</p>
-                                       <div className="d-flex justify-content-around">
-                                          <Button variant="success" onClick={() => addMerchQuantHandler(merchItem.key)}>
+                                    <div  className={cn(merchItem.item.quantity === 0 ? CustomersOrderCss['sold-out-show'] :  CustomersOrderCss['sold-out-hide'],'flex-column')}>
+                                       <p className='m-0'>Sold Out</p>
+                                       <div className="d-flex w-100 justify-content-around mt-3">
+                                          <Button variant="success" disabled={merchItem.item.quantity === 0} onClick={() => addMerchQuantHandler(merchItem.key,false)}>
                                              +
                                           </Button>
                                           <span>{merchItem.merchQuant}</span>
-                                          <Button variant="danger">-</Button>
+                                          <Button variant="danger "  disabled={merchItem.merchQuant === 0} onClick={() => addMerchQuantHandler(merchItem.key,true)}>-</Button>
+                                       </div>
+                                    </div>
+                                    <Card.Body className="text-center">                                   
+                                       <p>{merchItem.item.name}</p>
+                                       <p>{merchItem.item.unit_price} P</p>
+                                       <div className="d-flex justify-content-around">
+                                          <Button variant="success" disabled={merchItem.item.quantity === 0} onClick={() => addMerchQuantHandler(merchItem.key,false)}>
+                                             +
+                                          </Button>
+                                          <span>{merchItem.merchQuant}</span>
+                                          <Button variant="danger "  disabled={merchItem.merchQuant === 0} onClick={() => addMerchQuantHandler(merchItem.key,true)}>-</Button>
                                        </div>
                                     </Card.Body>
                                  </Card>

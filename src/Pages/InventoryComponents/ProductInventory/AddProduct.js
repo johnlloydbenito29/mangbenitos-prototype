@@ -13,13 +13,13 @@ function AddProduct({ modalToggle }) {
    const [quantity, setQuantity] = useState(0);
    const [price, setPrice] = useState(0);
 
-   // Add a new document in collection "cities"
+   // Add a new document in collection "Product"
    const addProductHandler = async (e) => {
       e.preventDefault();
       modalToggle();
       try {
          const collectionRef = collection(db, 'Products');
-         const payload = { name: name, quantity: Number(quantity), unit_price: Number(price), total_price: Number(price), updated_at: Timestamp.now(), created_at: Timestamp.now() };
+         const payload = { name: name, quantity: Number(quantity), unit_price: Number(price), total_price: Number(price * quantity), updated_at: Timestamp.now(), created_at: Timestamp.now() };
 
          console.log(`Name...`, name);
          console.log(`quantity...`, quantity);
