@@ -1,0 +1,45 @@
+.page-title {
+   height: 100%;
+   display: flex;
+   align-items: center;
+   padding: 1rem;
+   border-radius: 8px;
+   background: rgb(10, 10, 10);
+   background: -moz-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(255, 0, 0, 1) 100%);
+   background: -webkit-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(255, 0, 0, 1) 100%);
+   background: linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(255, 0, 0, 1) 100%);
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a0a0a",endColorstr="#ff0000",GradientType=1);
+}
+
+.order-card{
+    width: 700px;
+    margin: auto;
+}
+
+.order-card-title {
+   border-radius: 8px;
+   padding: 1rem;
+   background: rgb(10, 10, 10);
+   background: -moz-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(255, 0, 0, 1) 100%);
+   background: -webkit-linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(255, 0, 0, 1) 100%);
+   background: linear-gradient(90deg, rgba(10, 10, 10, 1) 26%, rgba(255, 0, 0, 1) 100%);
+   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a0a0a",endColorstr="#ff0000",GradientType=1);
+}
+
+.sold-out-show{
+   position: absolute;
+   height: 100%;
+   width: 100%;
+   background: #000000f1;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   z-index: 1;
+   color: white;
+   border-radius: 4px;
+   box-shadow: 0rem 0px 10px red;
+}
+
+.sold-out-hide{
+   display:none
+}

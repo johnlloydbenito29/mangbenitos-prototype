@@ -1,4 +1,3 @@
-import { doc, onSnapshot } from "firebase/firestore";
 
 const initialState = { initialProductArray: [], updatedProductData: [], initialInventory: [] };
 

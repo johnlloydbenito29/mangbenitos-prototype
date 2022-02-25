@@ -50,7 +50,7 @@ function ProductInventory() {
 
       // Uses referenced value
       const { quantity, unit_price: unitPrice } = currentProduct.item;
-
+  
       if (toMinus) {
          products[index].item.quantity = quantity - 1;
          products[index].item.total_price = (quantity - 1) * unitPrice;
@@ -116,7 +116,6 @@ function ProductInventory() {
       }
       try {
          // Adding Data to Firebase
-
          const collectionRef = collection(db, 'InventoryList');
          const payload = { items: products, total, Editor: currentUser.email, createdAt: Timestamp.now() };
 
@@ -147,41 +146,69 @@ function ProductInventory() {
                      <Col xs={5}>
                         <Card>
                            <Card.Header as="h5" className={cn(ProductInventoryStyle['card-header'], 'text-white', 'text-center')}>
-                              Product List
+                              Products
                            </Card.Header>
-                           <Card.Body>
+                           <Card.Body  className={cn(ProductInventoryStyle['card-body-holder'],'px-2','py-2')}>
+                              <div className={ProductInventoryStyle['product-nav-holder']}> 
+                                 <Row>
+                                    <Col xs={4}>
+                                       <p className='text-center'>
+                                          Product Name
+                                       </p>
+                                    </Col>
+                                    <Col xs={2}>
+                                       <p className='text-center'>
+                                          Quantity
+                                       </p>
+                                    </Col>
+                                    <Col xs={3}>
+                                       <p className='text-center'>
+                                         Unit Price
+                                       </p>
+                                    </Col>
+                                    <Col>
+                                       <p className='text-center'>
+                                        Total Price
+                                       </p>
+                                    </Col>
+                                 </Row>
+                              </div>
                               {products.map((product) => (
                                  <Card className="mb-3" key={product.key}>
-                                    <div className={SetInitialInventoryStyle['product-holder']}>
-                                       <Row >
-                                          <Col>
-                                             <input className="form-control" type="text" value={product.item.name} onChange={(e) => setProductName(product.key, e)} />
-                                          </Col>
-                                          <Col>
-                                             <div className="d-flex">
-                                                <button onClick={() => incrementQuantity(product.key)}>+</button>
-                                                <p>{product.item.quantity}</p>
-                                                <button disabled={product.item.quantity === 0} onClick={() => incrementQuantity(product.key, true)}>
-                                                   -
-                                                </button>
-                                             </div>
-                                          </Col>
-                                          <Col>
-                                             <input className="form-control" type="number" value={product.item.unit_price} onChange={(e) => setProductUnitPrice(product.key, e)} />
-                                          </Col>
-                                          <Col>
-                                             <p>{product.item.total_price}</p>
-                                          </Col>
-                                          <Col>
-                                             <Button onClick={() => deleteHandler(product.key)} variant="danger">
-                                                x
-                                             </Button>
-                                          </Col>
-                                       </Row>
-                                    </div>
+                                    <Card.Body className="px-2 py-2">
+                                       <div className={SetInitialInventoryStyle['product-holder']}>
+                                          <Row>
+                                             <Col xs={4}>
+                                                <input className="form-control" type="text" value={product.item.name} onChange={(e) => setProductName(product.key, e)} />
+                                             </Col>
+                                             <Col xs={2}>
+                                                <div className="d-flex">
+                                                   <button className="btn btn-success" onClick={() => incrementQuantity(product.key)}>
+                                                      +
+                                                   </button>
+                                                   <p>{product.item.quantity}</p>
+                                                   <button className="btn btn-danger" disabled={product.item.quantity === 0} onClick={() => incrementQuantity(product.key, true)}>
+                                                      -
+                                                   </button>
+                                                </div>
+                                             </Col>
+                                             <Col xs={3}>
+                                                <input className="form-control" type="number" value={product.item.unit_price} onChange={(e) => setProductUnitPrice(product.key, e)} />
+                                             </Col>
+                                             <Col>
+                                                <p className='my-0'>{product.item.total_price}</p>
+                                             </Col>
+                                             <Col>
+                                                <Button onClick={() => deleteHandler(product.key)} variant="danger">
+                                                   x
+                                                </Button>
+                                             </Col>
+                                          </Row>
+                                       </div>
+                                    </Card.Body>
                                  </Card>
                               ))}
-                              <div>
+                              <div className='d-flex justify-content-around align-items-center'>
                                  <Button variant="primary" onClick={save}>
                                     Save Inventory
                                  </Button>
