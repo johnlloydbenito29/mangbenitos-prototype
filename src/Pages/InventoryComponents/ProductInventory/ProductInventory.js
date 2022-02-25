@@ -116,7 +116,6 @@ function ProductInventory() {
       }
       try {
          // Adding Data to Firebase
-
          const collectionRef = collection(db, 'InventoryList');
          const payload = { items: products, total, Editor: currentUser.email, createdAt: Timestamp.now() };
 
@@ -147,7 +146,7 @@ function ProductInventory() {
                      <Col xs={5}>
                         <Card>
                            <Card.Header as="h5" className={cn(ProductInventoryStyle['card-header'], 'text-white', 'text-center')}>
-                              Product List
+                              Products
                            </Card.Header>
                            <Card.Body  className={cn(ProductInventoryStyle['card-body-holder'],'px-2','py-2')}>
                               <div className={ProductInventoryStyle['product-nav-holder']}> 

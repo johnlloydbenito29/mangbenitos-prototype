@@ -24,7 +24,7 @@ function InventoryList() {
    return (
       <Card>
          <Card.Header as="h5" className={cn(InventoryListCss['card-header'], 'text-white', 'text-center')}>
-            Inventory List
+            Product Inventory Record
          </Card.Header>
          <Card.Body className={InventoryListCss['list-body']}>
             <div className={cn(InventoryListCss['list-titles-holder'], 'row', 'gx-0')}>
