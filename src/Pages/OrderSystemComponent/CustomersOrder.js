@@ -25,9 +25,10 @@ function CustomersOrder() {
 	const formRef = useRef();
 
 	const [merchandises, setMerchandise] = useState([]);
-	const [formValues, setFormValues] = useState(customersInfo);
+	const [formValues, setFormValues] = useState({...customersInfo});
 	const [submitting, setSubmitting] = useState(false);
 	const [formValidated, setFormValidated] = useState(false);
+	const [formSelectErrors, setFormSelectErrors] = useState(null);
 
 	//Forms Event Handlers
 	const handleChange = (e) => {
@@ -43,6 +44,15 @@ function CustomersOrder() {
 
 		if (formRef.current) {
 			isValid = formRef.current.checkValidity();
+		}
+
+		// Validating select is different because we use react-select and not native bootstrap select
+		if (formValues.customersReceivingMethod === '') {
+			const newFormSelectErrors = {
+				customersReceivingMethod: true
+			};
+
+			setFormSelectErrors(newFormSelectErrors);
 		}
 
 		console.log('isValid', isValid)
@@ -69,6 +79,8 @@ function CustomersOrder() {
 		}
 
 		saveOrderHandler();
+		// Reset validated flag
+		setFormValidated(false);
 	};
 
 	const changeSelectValueHandler = (e, selected) => {
@@ -84,6 +96,14 @@ function CustomersOrder() {
 		console.log(`name`, name);
 
 		setFormValues(newFormValues);
+
+		// Reset form error
+		if (value !== '') {
+			const newFormSelectErrors = {...formSelectErrors};
+
+			newFormSelectErrors[name] = false;
+			setFormSelectErrors(newFormSelectErrors);
+		}
 	};
 
 	console.log(`Rm...`, formValues.customersReceivingMethod);
@@ -129,6 +149,8 @@ function CustomersOrder() {
 			await addDoc(collectionRef, payload);
 			// @FB: Set submitting back to false
 			setSubmitting(false);
+			// @FB: Reset form
+			setFormValues({...customersInfo})
 		} catch (err) {
 			console.log(err);
 			// @FB: Set submitting back to false
@@ -137,6 +159,7 @@ function CustomersOrder() {
 	};
 
 	console.log('formValues', formValues);
+	console.log('formSelectErrors', formSelectErrors);
 
 	// List of inventory Data
 	useEffect(() => {
@@ -180,10 +203,12 @@ function CustomersOrder() {
 											</div>
 										</Col>
 										<Col>
-											<Select options={options} value={formValues.customersReceivingMethod} onChange={changeSelectValueHandler} name="customersReceivingMethod" placeholder={formValues.customersReceivingMethod === '' ? 'Choose Recieve Method' : formValues.customersReceivingMethod} required isSearchable={false} />
-											<div class="invalid-feedback">
-												Receive method is required
-											</div>
+											<Select className={`react-select ${formSelectErrors && formSelectErrors.customersReceivingMethod ? 'invalid' : ''}`} innerProps={{className: 'react-select-inner'}} options={options} value={formValues.customersReceivingMethod} onChange={changeSelectValueHandler} name="customersReceivingMethod" placeholder={formValues.customersReceivingMethod === '' ? 'Choose Recieve Method' : formValues.customersReceivingMethod} required isSearchable={false} />
+											{(formSelectErrors && formSelectErrors.customersReceivingMethod) && (
+												<div class="select-invalid-feedback">
+													Receive method is required
+												</div>
+											)}
 										</Col>
 									</Row>
 								</Form.Group>
