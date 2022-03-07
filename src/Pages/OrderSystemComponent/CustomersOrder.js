@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { addDoc, collection, limit, onSnapshot, orderBy, query, Timestamp } from 'firebase/firestore';
+import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, Timestamp, writeBatch } from 'firebase/firestore';
 import { db } from '../../Firebase/Firebase';
 
 import CustomersOrderCss from '../PagesModuleCss/CustomersOrder.module.css';
@@ -137,7 +137,7 @@ function CustomersOrder() {
       setMerchandise(newMerchandises);
    };
 
-   // Reset MerchQuant
+   // Reset MercJhQuant
    const resetQuantHandler = () => {
       const newMerchandises = [...merchandises];
       console.log(newMerchandises);
@@ -162,7 +162,19 @@ function CustomersOrder() {
          const collectionRef = collection(db, 'order');
          const payload = { ...formValues, ...merchandises, createdAt: Timestamp.now() };
 
+         // @FB: Update the products qauntity
+
+         const batch = writeBatch(db);
+         merchandises.forEach((product) => {
+            console.log('product.key', product.key);
+
+            const sfRef = doc(db, 'Products', product.key);
+            batch.update(sfRef, { ...product.item });
+         });
+
          await addDoc(collectionRef, payload);
+         await batch.commit();
+
          // @FB: Set submitting back to false
          setSubmitting(false);
          // @FB: Reset form
@@ -185,6 +197,8 @@ function CustomersOrder() {
          setMerchandise(snapshot.docs.map((doc) => ({ key: doc.id, item: doc.data(), merchQuant: 0 })));
       });
    }, []);
+
+   console.log(merchandises);
 
    return (
       <PagesBody>
